@@ -1,0 +1,101 @@
+<!-- <!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Streaming + Amazon Rekognition</title>
+   <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+    <h2 style="position: relative;text-align: center;color: black;">Soft Car, Hyundai Hackathon</h2>
+    <div class="container" style="position: relative;text-align: center;color: black;">
+      <img id="bg" src="{{ url_for('video_feed') }}">
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2 style="position: relative;text-align: center;color: black;">Soft Car, Hyundai Hackathon</h2>
+<div class="container" style="position: relative;text-align: center;color: black;">
+<img id="bg" src="{{ url_for('video_feed') }}">
+</div>
+<!-- 지도를 표시할 div -->
+<div id="map" style="width:1000px;height:1000px;"></div>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fbb6a3176219d325b047d601aad0bb60&libraries=services"></script>
+
+<script>
+    //현재위치 파악
+    navigator.geolocation.getCurrentPosition(function(pos) {
+        // console.log(pos);
+        var latitude = pos.coords.latitude;
+        var longitude = pos.coords.longitude;
+        // alert("현재 위치는 : " + latitude + ", "+ longitude);
+        // var markers = [
+        //     {
+        //         position: new kakao.maps.LatLng(latitude, longitude), 
+        //         text: '내위치' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다     
+        //     }
+        // ];
+
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapOption = {
+                center: new kakao.maps.LatLng(latitude, longitude), // 지도의 중심좌표
+                level: 4, // 지도의 확대 레벨
+                // marker: markers,
+        };
+
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        var markerPosition  = new kakao.maps.LatLng(latitude, longitude); 
+
+        var marker = new kakao.maps.Marker({
+            position: markerPosition,
+        });
+
+        marker.setMap(map);
+
+        var iwContent = '<div style="padding:5px;">내위치</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+            iwPosition = new kakao.maps.LatLng(latitude, longitude), //인포윈도우 표시 위치입니다
+            iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+        // 인포윈도우를 생성하고 지도에 표시합니다
+        var infowindow = new kakao.maps.InfoWindow({
+            map: map, // 인포윈도우가 표시될 지도
+            position : iwPosition, 
+            content : iwContent,
+            removable : iwRemoveable
+        });
+
+        infowindow.open(map, marker);
+
+        var places = new kakao.maps.services.Places(map);
+        places.setMap(map);
+
+        // places.categorySearch('PK6', placesSearchCB, {useMapBounds:true});
+
+        // function placesSearchCB (data, status, pagination) {
+        //     if (status === kakao.maps.services.Status.OK) {
+        //         for (var i=0; i<data.length; i++) {
+        //             displayMarker(data[i]);
+        //         }
+        //     }
+        // }
+
+        // function displayMarker(place) {
+        // // 마커를 생성하고 지도에 표시합니다
+        //     var marker = new kakao.maps.Marker({
+        //         map: map,
+        //         position: new kakao.maps.LatLng(place.y, place.x)
+        //     });
+        // }
+
+    }); 
+</script>
+</body>
+</html>
